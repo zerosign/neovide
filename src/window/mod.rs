@@ -26,7 +26,8 @@ use winit::platform::macos::WindowBuilderExtMacOS;
 use draw_background::draw_background;
 
 #[cfg(target_os = "linux")]
-use winit::platform::unix::WindowBuilderExtUnix;
+use winit::platform::wayland::WindowBuilderExtWayland;
+// use winit::platform::unix::WindowBuilderExtUnix;
 
 use crate::profiling::{
     emit_frame_mark, tracy_create_gpu_context, tracy_gpu_collect, tracy_gpu_zone, tracy_zone,
@@ -403,12 +404,15 @@ pub fn create_window() {
     }
 
     #[cfg(target_os = "linux")]
-    let winit_window_builder = winit_window_builder
-        .with_app_id(cmd_line_settings.wayland_app_id.clone())
-        .with_class(
-            cmd_line_settings.x11_wm_class_instance.clone(),
-            cmd_line_settings.x11_wm_class.clone(),
-        );
+    let winit_window_builder = winit_window_builder.with_name(
+        cmd_line_settings.wayland_app_id.clone(),
+        cmd_line_settings.x11_wm_class.clone(),
+    );
+    // .with_app_id(cmd_line_settings.wayland_app_id.clone())
+    // .with_class(
+    // cmd_line_settings.x11_wm_class_instance.clone(),
+    // cmd_line_settings.x11_wm_class.clone(),
+    // );
 
     #[cfg(target_os = "macos")]
     let winit_window_builder = winit_window_builder.with_accepts_first_mouse(false);
